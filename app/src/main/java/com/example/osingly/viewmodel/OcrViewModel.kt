@@ -26,10 +26,12 @@ class OcrViewModel(
             error.value = null
             try {
                 val extractedText = ocrHelper.extractTextFromImage(bitmap)
-                val response = translationApi.translate(
-                    TranslationRequest(text = extractedText, fromOsing = fromOsing)
-                )
-                _translatedText.value = response.text
+                // TODO: Enable this
+//                val response = translationApi.translate(
+//                    TranslationRequest(text = extractedText, fromOsing = fromOsing)
+//                )
+//                _translatedText.value = response.text
+                _translatedText.value = extractedText
             } catch (e: Exception) {
                 error.value = e.localizedMessage
             } finally {

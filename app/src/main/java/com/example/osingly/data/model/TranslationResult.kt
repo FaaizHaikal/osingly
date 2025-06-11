@@ -1,4 +1,4 @@
-package com.example.osingly.model
+package com.example.osingly.data.model
 
 data class TranslationResult (
     val text: String,

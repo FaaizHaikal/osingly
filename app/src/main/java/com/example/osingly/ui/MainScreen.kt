@@ -11,6 +11,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -75,7 +76,7 @@ fun MainScreen(
                     onValueChange = { viewModel.updateInputText(it) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                        .padding(8.dp),
                     placeholderText = "Ketik teks dalam bahasa Osing...",
                     fontSize = state.fontSize
                 )
@@ -113,7 +114,8 @@ fun MainScreen(
                     text = state.translatedText.ifBlank { "Hasil terjemahan akan muncul di sini..." },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp),
+                        .height(120.dp)
+                        .padding(8.dp),
                     fontSize = state.fontSize.sp
                 )
 
@@ -146,7 +148,12 @@ fun MainScreen(
                     value = state.fontSize,
                     onValueChange = { viewModel.updateFontSize(it) },
                     valueRange = 12f..24f,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    colors = SliderDefaults.colors(
+                        thumbColor = MaterialTheme.colorScheme.primary,
+                        activeTrackColor = MaterialTheme.colorScheme.primary,
+                        inactiveTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.24f)
+                    ),
                 )
                 Text("${state.fontSize.toInt()}", modifier = Modifier.padding(start = 16.dp))
             }

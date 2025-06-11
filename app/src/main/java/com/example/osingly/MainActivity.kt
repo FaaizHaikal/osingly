@@ -4,44 +4,50 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.osingly.data.api.TranslationApi
-import com.example.osingly.data.ocr.OcrHelper
 import com.example.osingly.di.AppModule
+import com.example.osingly.ui.MainScreen
 import com.example.osingly.ui.OcrScreen
 import com.example.osingly.ui.theme.OsinglyTheme
-import com.example.osingly.viewmodel.OcrViewModel
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.osingly.utils.CameraPermission
 
 class MainActivity : ComponentActivity() {
-
-    private val CAMERA_PERMISSION_CODE = 1001
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.CAMERA),
-                CAMERA_PERMISSION_CODE
-            )
-        }
+        CameraPermission.request(this)
 
-        val viewModel = AppModule.provideOcrViewModel()
+        val ocrViewModel = AppModule.provideOcrViewModel()
+        val TranslationViewModel = AppModule.provideTranslationViewModel()
 
         setContent {
-            OsinglyTheme {
-                OcrScreen(
-                    viewModel = viewModel,
-                    onResult = { result ->
-                        println("Translation result: $result")
-                    }
-                )
+            val isDarkTheme = TranslationViewModel.state.value.isDarkTheme
+
+            OsinglyTheme(darkTheme = isDarkTheme) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    MainScreen(
+                        viewModel = TranslationViewModel
+                    )
+                }
+
             }
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        CameraPermission.handleResult(this, requestCode, grantResults)
     }
 }

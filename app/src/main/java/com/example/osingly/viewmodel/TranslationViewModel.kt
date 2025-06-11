@@ -19,6 +19,7 @@ class TranslationViewModel (
         translatedText: String? = null,
         fromOsing: Boolean? = null,
         fontSize: Float? = null,
+        isDarkTheme: Boolean? = null,
         isLoading: Boolean? = null,
         error: String? = null // This null means "no error", not "keep current error"
     ) {
@@ -27,6 +28,7 @@ class TranslationViewModel (
             translatedText = translatedText ?: _State.value.translatedText,
             fromOsing = fromOsing ?: _State.value.fromOsing,
             fontSize = fontSize ?: _State.value.fontSize,
+            isDarkTheme = isDarkTheme ?: _State.value.isDarkTheme,
             isLoading = isLoading ?: _State.value.isLoading,
             error = error // Special case - we want to be able to clear errors with null
         )
@@ -52,6 +54,10 @@ class TranslationViewModel (
 
     fun swapLanguage() {
         setState(fromOsing = !state.value.fromOsing)
+    }
+
+    fun swapTheme() {
+        setState(isDarkTheme = !state.value.isDarkTheme)
     }
 
     fun updateFontSize(size: Float) {

@@ -46,7 +46,7 @@ fun OcrScreen(
 
     val loading by viewModel.loading.collectAsState()
     val error by viewModel.error.collectAsState()
-    val result by viewModel.translatedText.collectAsState()
+    val result by viewModel.extractedText.collectAsState()
 
     val previewView = remember { PreviewView(context) }
 
@@ -79,7 +79,7 @@ fun OcrScreen(
                     object : ImageCapture.OnImageSavedCallback {
                         override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                             val bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
-                            viewModel.processBitmap(bitmap)
+                            viewModel.extractText(bitmap)
                         }
 
                         override fun onError(exception: ImageCaptureException) {

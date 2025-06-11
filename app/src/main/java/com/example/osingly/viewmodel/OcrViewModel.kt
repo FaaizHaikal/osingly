@@ -3,35 +3,27 @@ package com.example.osingly.viewmodel
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.osingly.data.api.TranslationApi
-import com.example.osingly.data.ocr.OcrHelper
-import com.example.osingly.model.TranslationRequest
+import com.example.osingly.data.api.OcrService
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class OcrViewModel(
-    private val ocrHelper: OcrHelper,
-    private val translationApi: TranslationApi
+    private val ocrService : OcrService
 ) : ViewModel() {
 
-    private val _translatedText = MutableStateFlow<String?>(null)
-    val translatedText: StateFlow<String?> = _translatedText
+    private val _extractedText = MutableStateFlow<String?>(null)
+    val extractedText: StateFlow<String?> = _extractedText
 
     val loading = MutableStateFlow(false)
     val error = MutableStateFlow<String?>(null)
 
-    fun processBitmap(bitmap: Bitmap, fromOsing: Boolean = true) {
+    fun extractText(bitmap: Bitmap) {
         viewModelScope.launch {
             loading.value = true
             error.value = null
             try {
-                val extractedText = ocrHelper.extractTextFromImage(bitmap)
-                // TODO: Enable this
-//                val response = translationApi.translate(
-//                    TranslationRequest(text = extractedText, fromOsing = fromOsing)
-//                )
-//                _translatedText.value = response.text
-                _translatedText.value = extractedText
+                val extractedText = ocrService.extractText(bitmap)
+                _extractedText.value = extractedText
             } catch (e: Exception) {
                 error.value = e.localizedMessage
             } finally {

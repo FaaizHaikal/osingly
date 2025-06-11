@@ -5,17 +5,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.*
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import com.example.osingly.ui.components.CameraButton
 import com.example.osingly.ui.components.ClearTextButton
@@ -24,6 +24,7 @@ import com.example.osingly.ui.components.GalleryButton
 import com.example.osingly.ui.components.ShareButton
 import com.example.osingly.ui.components.SwapLanguageButton
 import com.example.osingly.ui.components.ToggleThemeButton
+import com.example.osingly.ui.components.TranslateInputField
 import com.example.osingly.viewmodel.TranslationViewModel
 
 @Composable
@@ -42,17 +43,18 @@ fun MainScreen(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
         ) {
             Text(
                 text = "Penerjemah Osing",
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.weight(1f)
+                fontWeight = FontWeight.Bold
             )
 //            IconButton(onClick = onSettingsClick) {
 //                Icon(Icons.Default.Settings, contentDescription = "Settings")
 //            }
-            ToggleThemeButton()
+            ToggleThemeButton(isDarkTheme = state.isDarkTheme, onThemeChange = viewModel::swapTheme)
         }
 
         SwapLanguageButton(onSwapLanguages = viewModel::swapLanguage)
@@ -62,17 +64,20 @@ fun MainScreen(
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            )
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                OutlinedTextField(
+                TranslateInputField(
                     value = state.inputText,
                     onValueChange = { viewModel.updateInputText(it) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp),
-                    placeholder = { Text("Ketik teks dalam bahasa Osing...") },
-                    textStyle = LocalTextStyle.current.copy(fontSize = state.fontSize.sp)
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    placeholderText = "Ketik teks dalam bahasa Osing...",
+                    fontSize = state.fontSize
                 )
 
                 Row(
@@ -83,7 +88,10 @@ fun MainScreen(
                     GalleryButton(onGalleryClick = viewModel::clearInputText)
                     ClearTextButton(onClearInput = viewModel::clearInputText)
 
-                    Button(onClick = viewModel::translate) {
+                    Button(
+                        onClick = viewModel::translate,
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                        ) {
                         Text("Terjemahkan")
                     }
                 }
@@ -95,7 +103,10 @@ fun MainScreen(
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
             elevation = CardDefaults.cardElevation(4.dp),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            )
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
@@ -121,7 +132,10 @@ fun MainScreen(
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
             elevation = CardDefaults.cardElevation(2.dp),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            )
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -134,7 +148,7 @@ fun MainScreen(
                     valueRange = 12f..24f,
                     modifier = Modifier.weight(1f)
                 )
-                Text("${state.fontSize.toInt()}sp", modifier = Modifier.padding(start = 16.dp))
+                Text("${state.fontSize.toInt()}", modifier = Modifier.padding(start = 16.dp))
             }
         }
 

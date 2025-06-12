@@ -129,8 +129,8 @@ fun MainScreen(
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    CopyButton(onCopyClick = viewModel::clearInputText)
-                    ShareButton(onShareClick = viewModel::clearInputText)
+                    CopyButton(textToCopy = state.translatedText)
+                    ShareButton(textToShare = state.translatedText)
                 }
             }
         }

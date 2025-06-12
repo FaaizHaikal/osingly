@@ -100,7 +100,7 @@ class TranslationViewModel (
     }
 
     fun clearInputText() {
-        setState(inputText = "")
+        setState(inputText = "", translatedText = "")
     }
 
     fun updateInputText(text: String) {

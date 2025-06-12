@@ -80,7 +80,11 @@ fun MainScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
-                    placeholderText = "Ketik teks dalam bahasa Osing...",
+                    placeholderText = if (state.fromOsing) {
+                        "Ketik teks dalam bahasa Osing..."
+                    } else {
+                        "Ketik teks dalam bahasa Indonesia..."
+                    },
                     fontSize = state.fontSize
                 )
 

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SwapLanguageButton(
+    fromOsing: Boolean,
     onSwapLanguages: () -> Unit
 ) {
     Row(
@@ -32,7 +33,7 @@ fun SwapLanguageButton(
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Osing",
+            text = if (fromOsing) "Osing" else "Indonesia",
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
@@ -42,7 +43,7 @@ fun SwapLanguageButton(
             Icon(Icons.Filled.SwapHoriz, contentDescription = "Swap Languages")
         }
         Text(
-            text = "Indonesia",
+            text = if (fromOsing) "Indonesia" else "Osing",
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,

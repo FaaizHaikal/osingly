@@ -58,13 +58,10 @@ fun MainScreen(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-//            IconButton(onClick = onSettingsClick) {
-//                Icon(Icons.Default.Settings, contentDescription = "Settings")
-//            }
             ToggleThemeButton(isDarkTheme = state.isDarkTheme, onThemeChange = viewModel::swapTheme)
         }
 
-        SwapLanguageButton(onSwapLanguages = viewModel::swapLanguage)
+        SwapLanguageButton(fromOsing = state.fromOsing, onSwapLanguages = viewModel::swapLanguage)
 
         Card(
             modifier = Modifier

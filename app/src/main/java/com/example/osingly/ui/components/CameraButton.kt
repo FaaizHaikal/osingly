@@ -10,7 +10,9 @@ import androidx.compose.runtime.Composable
 fun CameraButton(
     onCameraClick: () -> Unit
 ) {
-    IconButton(onClick = onCameraClick) {
-        Icon(Icons.Filled.CameraAlt, contentDescription = "Ambil Foto")
+    IconButton(
+        onClick = onCameraClick
+    ) {
+        Icon(Icons.Filled.CameraAlt, contentDescription = "Camera")
     }
 }

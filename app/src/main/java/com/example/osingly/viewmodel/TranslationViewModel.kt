@@ -1,15 +1,30 @@
 package com.example.osingly.viewmodel
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.osingly.data.api.OcrService
 import com.example.osingly.data.api.TranslationService
 import com.example.osingly.data.model.TranslationRequest
+import com.example.osingly.utils.ImageUtils.uriToBitmap
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 
 class TranslationViewModel (
-    private val translationService: TranslationService
+    private val appContext: Context,
+    private val translationService: TranslationService,
+    private val ocrService: OcrService
 ) : ViewModel() {
     private val _State = mutableStateOf(TranslationState())
     val state: State<TranslationState> = _State
@@ -34,6 +49,25 @@ class TranslationViewModel (
         )
     }
 
+    fun translateImage(uri: Uri) {
+        viewModelScope.launch {
+            setState(isLoading = true, error = null)
+            try {
+                val bitmap = withContext(Dispatchers.IO) {
+                    appContext.uriToBitmap(uri) ?: throw Exception("Failed to load image")
+                }
+
+                val extractedText = ocrService.extractText(bitmap)
+                setState(inputText = extractedText)
+                translate()
+            } catch (e: Exception) {
+                setState(error = e.localizedMessage)
+            } finally {
+                setState(isLoading = false)
+            }
+        }
+    }
+
     fun translate() {
         viewModelScope.launch {
             setState(isLoading = true, error = null)
@@ -46,6 +80,7 @@ class TranslationViewModel (
                 setState(translatedText = response.text)
             } catch (e: Exception) {
                 setState(error = e.localizedMessage)
+                Log.e("ERROR", e.localizedMessage)
             } finally {
                 setState(isLoading = false)
             }

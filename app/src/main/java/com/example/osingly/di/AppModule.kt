@@ -1,28 +1,32 @@
 package com.example.osingly.di
 
+import android.content.Context
 import com.example.osingly.data.api.TranslationService
 import com.example.osingly.data.api.OcrService
-import com.example.osingly.viewmodel.OcrViewModel
 import com.example.osingly.viewmodel.TranslationViewModel
+import com.google.android.datatransport.runtime.dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object AppModule {
-    val translationService: TranslationService by lazy {
+    private val translationService: TranslationService by lazy {
         Retrofit.Builder()
-            .baseUrl("http://your.server.com/") // TODO: replace with real endpoint
+            .baseUrl("http://192.168.137.1:5000") // TODO: replace with real endpoint
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(TranslationService::class.java)
     }
 
-    val ocrService = OcrService
+    private val ocrService = OcrService
 
-    fun provideOcrViewModel(): OcrViewModel {
-        return OcrViewModel(ocrService)
-    }
-
-    fun provideTranslationViewModel(): TranslationViewModel {
-        return TranslationViewModel(translationService)
+    @Provides
+    fun provideTranslationViewModel(
+        context: Context
+    ): TranslationViewModel {
+        return TranslationViewModel(
+            appContext = context.applicationContext,
+            ocrService = ocrService,
+            translationService = translationService
+        )
     }
 }

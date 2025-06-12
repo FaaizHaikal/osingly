@@ -1,5 +1,6 @@
 package com.example.osingly.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,8 +15,10 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import com.example.osingly.ui.components.CameraButton
@@ -30,10 +33,13 @@ import com.example.osingly.viewmodel.TranslationViewModel
 
 @Composable
 fun MainScreen(
-    viewModel: TranslationViewModel
+    viewModel: TranslationViewModel,
+    onOpenGallery: () -> Unit,
+    onOpenCamera: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val state by viewModel.state
+    val context = LocalContext.current
 
     Column(
         Modifier
@@ -85,8 +91,8 @@ fun MainScreen(
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    CameraButton(onCameraClick = viewModel::clearInputText)
-                    GalleryButton(onGalleryClick = viewModel::clearInputText)
+                    CameraButton(onCameraClick = onOpenCamera)
+                    GalleryButton(onGalleryClick = onOpenGallery)
                     ClearTextButton(onClearInput = viewModel::clearInputText)
 
                     Button(
@@ -161,6 +167,12 @@ fun MainScreen(
 
         if (state.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+        }
+
+        LaunchedEffect(state.error) {
+            state.error?.let {
+                Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            }
         }
     }
 }

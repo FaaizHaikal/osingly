@@ -10,7 +10,9 @@ import androidx.compose.runtime.Composable
 fun GalleryButton(
     onGalleryClick: () -> Unit
 ) {
-    IconButton(onClick = onGalleryClick) {
+    IconButton(
+        onClick = onGalleryClick
+    ) {
         Icon(Icons.Filled.Photo, contentDescription = "Galeri")
     }
 }

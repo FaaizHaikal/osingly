@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,8 @@ import com.example.osingly.R
 
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier) {
-    val scale = remember { Animatable(0.8f) }
+    val scale = remember { Animatable(0f) }
+    val textAlpha = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
         scale.animateTo(
@@ -35,6 +37,7 @@ fun SplashScreen(modifier: Modifier = Modifier) {
                 easing = FastOutSlowInEasing
             )
         )
+        textAlpha.animateTo(1f, animationSpec = tween(1200))
     }
 
     Box(
@@ -55,7 +58,8 @@ fun SplashScreen(modifier: Modifier = Modifier) {
             Text(
                 text = "Osingly", // Replace with your actual app name
                 style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.alpha(textAlpha.value)
             )
         }
     }

@@ -11,13 +11,20 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.FileProvider
 import com.example.osingly.di.AppModule
 import com.example.osingly.ui.MainScreen
+import com.example.osingly.ui.SplashScreen
 import com.example.osingly.ui.theme.OsinglyTheme
 import com.example.osingly.utils.CameraPermission
 import com.example.osingly.viewmodel.TranslationViewModel
+import kotlinx.coroutines.delay
 import java.io.File
 
 class MainActivity : ComponentActivity() {
@@ -45,25 +52,35 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val isDarkTheme = translationViewModel.state.value.isDarkTheme
+            var showSplash by remember { mutableStateOf(true) }
+
+            LaunchedEffect (Unit) {
+                delay(2000) // 2 second delay
+                showSplash = false
+            }
 
             OsinglyTheme(darkTheme = isDarkTheme) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(
-                        viewModel = translationViewModel,
-                        onOpenGallery = { galleryLauncher.launch("image/*") },
-                        onOpenCamera = {
-                            val uri = getTempFileUri()
-                            if (uri != null) {
-                                tempImageUri = uri
-                                cameraLauncher.launch(uri)
-                            } else {
-                                Toast.makeText(this, "Failed to create temp file", Toast.LENGTH_SHORT).show()
+                    if (showSplash) {
+                        SplashScreen()
+                    } else {
+                        MainScreen(
+                            viewModel = translationViewModel,
+                            onOpenGallery = { galleryLauncher.launch("image/*") },
+                            onOpenCamera = {
+                                val uri = getTempFileUri()
+                                if (uri != null) {
+                                    tempImageUri = uri
+                                    cameraLauncher.launch(uri)
+                                } else {
+                                    Toast.makeText(this, "Failed to create temp file", Toast.LENGTH_SHORT).show()
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
 
             }

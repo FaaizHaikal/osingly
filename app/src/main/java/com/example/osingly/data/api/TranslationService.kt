@@ -6,6 +6,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface TranslationService {
-    @POST("/translate")
+    @POST("translate")
     suspend fun translate(@Body request: TranslationRequest): TranslationResult
 }

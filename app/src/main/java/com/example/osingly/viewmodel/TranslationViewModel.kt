@@ -72,6 +72,11 @@ class TranslationViewModel (
         viewModelScope.launch {
             setState(isLoading = true, error = null)
 
+            if (state.value.inputText == "") {
+                clearInputText()
+                return@launch
+            }
+
             try {
                 val response = translationService.translate(
                     TranslationRequest(text = _State.value.inputText, fromOsing = _State.value.fromOsing)

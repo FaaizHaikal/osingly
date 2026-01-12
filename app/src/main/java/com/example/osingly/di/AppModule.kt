@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object AppModule {
     private val translationService: TranslationService by lazy {
         Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8000/api/") // TODO: replace with real endpoint
+            .baseUrl("https://d4d8-182-253-50-40.ngrok-free.app/api/") // TODO: replace with real endpoint
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(TranslationService::class.java)
